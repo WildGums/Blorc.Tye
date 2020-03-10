@@ -4,7 +4,7 @@
     <AssemblyName>Blorc.Micronetes.Example</AssemblyName>
     <RootNamespace>Blorc</RootNamespace>
     <PackageId>Blorc.Micronetes</PackageId>
-    <PackageVersion>1.0.0-alpha0175</PackageVersion>
+    <PackageVersion>1.0.0-alpha0000</PackageVersion>
     <Description>Micronetes service discorver for Blazor.</Description>
     <PackageTags>blazor;core</PackageTags>
     <IsPackable>true</IsPackable>

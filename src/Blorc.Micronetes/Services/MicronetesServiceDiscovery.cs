@@ -71,5 +71,10 @@ namespace Blorc.Services
 
             return endPoint;
         }
+
+        public Task<string> GetServiceEndPoint(string serviceName, string bindingName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

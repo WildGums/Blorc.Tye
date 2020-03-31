@@ -19,20 +19,20 @@ namespace Blorc.Tye.Services
     using Newtonsoft.Json;
 
     /// <summary>
-    /// The Micronetes service discovery.
+    ///     The Micronetes service discovery.
     /// </summary>
     public class TyeServiceDiscovery : IServiceDiscovery
     {
         /// <summary>
-        /// The configuration service.
+        ///     The configuration service.
         /// </summary>
         private readonly IConfigurationService _configurationService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TyeServiceDiscovery"/> class.
+        ///     Initializes a new instance of the <see cref="TyeServiceDiscovery" /> class.
         /// </summary>
         /// <param name="configurationService">
-        /// The configuration service.
+        ///     The configuration service.
         /// </param>
         public TyeServiceDiscovery(IConfigurationService configurationService)
         {
@@ -53,16 +53,16 @@ namespace Blorc.Tye.Services
         /// </returns>
         public async Task<string> GetServiceEndPoint(string serviceName, int idx = 0)
         {
-            var micronetesSection = await _configurationService.GetSection<Tye>("micronetes");
+            var endPoint = string.Empty;
+
+            var tyeSection = await _configurationService.GetSection<Tye>("tye");
 
             var apiV1Services = "api/v1/services";
-            var httpClient = new HttpClient { BaseAddress = new Uri(micronetesSection.Url) };
+            var httpClient = new HttpClient { BaseAddress = new Uri(tyeSection.Url) };
 
             var deserializedService = await httpClient.GetStringAsync($"{apiV1Services}/{serviceName}");
 
             var service = JsonConvert.DeserializeObject<Service>(deserializedService);
-
-            var endPoint = string.Empty;
 
             var serviceBinding = service.Description.Bindings.ElementAt(idx);
             if (serviceBinding != null)

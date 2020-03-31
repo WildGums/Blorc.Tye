@@ -3,9 +3,9 @@
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <AssemblyName>Blorc.Tye</AssemblyName>
     <RootNamespace>Blorc.Tye</RootNamespace>
-    <PackageId>Blorc.Micronetes</PackageId>
-    <PackageVersion>1.0.0-alpha0000-1</PackageVersion>
-    <Description>Micronetes service discorver for Blazor.</Description>
+    <PackageId>Blorc.Tye</PackageId>
+    <PackageVersion>1.0.0-alpha0000</PackageVersion>
+    <Description>Tye service discorver for Blazor.</Description>
     <PackageTags>blazor;core</PackageTags>
     <IsPackable>true</IsPackable>
     <!--
@@ -24,7 +24,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Sln" Version="0.3.0" />
     <PackageReference Include="System.Reactive" Version="4.3.2" />
-    <PackageReference Include="YamlDotNet" Version="8.0.0" />
+    <PackageReference Include="YamlDotNet" Version="8.1.0" />
 
   </ItemGroup>
   <ItemGroup>

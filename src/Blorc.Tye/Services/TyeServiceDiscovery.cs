@@ -58,7 +58,9 @@ namespace Blorc.Tye.Services
             var tyeSection = await _configurationService.GetSection<Tye>("tye");
 
             var apiV1Services = "api/v1/services";
-            var httpClient = new HttpClient { BaseAddress = new Uri(tyeSection.Url) };
+            var address = new Uri(tyeSection.Url);
+            
+            var httpClient = new HttpClient { BaseAddress = address };
 
             var deserializedService = await httpClient.GetStringAsync($"{apiV1Services}/{serviceName}");
 
@@ -67,7 +69,7 @@ namespace Blorc.Tye.Services
             var serviceBinding = service.Description.Bindings.ElementAt(idx);
             if (serviceBinding != null)
             {
-                endPoint = $"{serviceBinding.Protocol}://127.0.0.1:{serviceBinding.Port}";
+                endPoint = $"{serviceBinding.Protocol}://{address.Host}:{serviceBinding.Port}";
             }
 
             return endPoint;

@@ -11,16 +11,16 @@
     {
         public Service()
         {
-            this.Logs.Subscribe(
+            Logs.Subscribe(
                 entry =>
+                {
+                    if (CachedLogs.Count > 5000)
                     {
-                        if (this.CachedLogs.Count > 5000)
-                        {
-                            this.CachedLogs.Dequeue();
-                        }
+                        CachedLogs.Dequeue();
+                    }
 
-                        this.CachedLogs.Enqueue(entry);
-                    });
+                    CachedLogs.Enqueue(entry);
+                });
         }
 
         [JsonIgnore]
@@ -49,12 +49,12 @@
         {
             get
             {
-                if (this.Description.DockerImage != null)
+                if (Description.DockerImage != null)
                 {
                     return ServiceType.Container;
                 }
 
-                if (this.Description.Project != null)
+                if (Description.Project != null)
                 {
                     return ServiceType.Project;
                 }
@@ -74,8 +74,8 @@
 
         public ReplicaEvent(ReplicaState state, ReplicaStatus replica)
         {
-            this.State = state;
-            this.Replica = replica;
+            State = state;
+            Replica = replica;
         }
     }
 
@@ -135,8 +135,8 @@
 
         public ReplicaStatus(Service service, string name)
         {
-            this.Service = service;
-            this.Name = name;
+            Service = service;
+            Name = name;
         }
 
         [JsonIgnore]

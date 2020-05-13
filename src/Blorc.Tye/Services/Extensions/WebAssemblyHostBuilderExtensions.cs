@@ -6,7 +6,7 @@
     using Blorc.Services;
     using Blorc.Tye.Model.Configuration;
 
-    using Microsoft.AspNetCore.Blazor.Hosting;
+    using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>

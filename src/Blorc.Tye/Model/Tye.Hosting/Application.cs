@@ -12,10 +12,6 @@
 
     public class Application
     {
-        public string ContextDirectory { get; set; } = Directory.GetCurrentDirectory();
-
-        public string Source { get; set; }
-
         public Application(IEnumerable<ServiceDescription> services)
         {
             var map = new Dictionary<string, Service>();
@@ -27,46 +23,14 @@
                 map[s.Name] = new Service { Description = s };
             }
 
-            this.Services = map;
+            Services = map;
         }
 
-        public static Application FromYaml(string path)
-        {
-            var fullPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), path));
+        public string ContextDirectory { get; set; } = Directory.GetCurrentDirectory();
 
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .Build();
+        public Dictionary<string, Service> Services { get; }
 
-            var descriptions = deserializer.Deserialize<ServiceDescription[]>(new StringReader(File.ReadAllText(path)));
-
-            var contextDirectory = Path.GetDirectoryName(fullPath);
-
-            foreach (var d in descriptions)
-            {
-                if (d.Project == null)
-                {
-                    continue;
-                }
-
-                // Try to populate more from launch settings
-                var projectFilePath = Path.GetFullPath(Path.Combine(contextDirectory, d.Project));
-
-                if (!TryGetLaunchSettings(projectFilePath, out var projectSettings))
-                {
-                    continue;
-                }
-
-                PopulateFromLaunchSettings(d, projectSettings);
-            }
-
-            return new Application(descriptions)
-            {
-                Source = fullPath,
-                // Use the file location as the context when loading from a file
-                ContextDirectory = contextDirectory
-            };
-        }
+        public string Source { get; set; }
 
         public static Application FromProject(string path)
         {
@@ -74,65 +38,7 @@
 
             var projectDescription = CreateDescriptionFromProject(fullPath);
 
-            return new Application(projectDescription == null ? new ServiceDescription[0] : new ServiceDescription[] { projectDescription })
-            {
-                Source = fullPath,
-                ContextDirectory = Path.GetDirectoryName(fullPath)
-            };
-        }
-
-        private static ServiceDescription CreateDescriptionFromProject(string fullPath)
-        {
-            if (!TryGetLaunchSettings(fullPath, out var projectSettings))
-            {
-                return null;
-            }
-
-            var projectDescription = new ServiceDescription
-            {
-                Name = Path.GetFileNameWithoutExtension(fullPath).ToLower(),
-                Project = fullPath
-            };
-
-            PopulateFromLaunchSettings(projectDescription, projectSettings);
-
-            return projectDescription;
-        }
-
-        private static void PopulateFromLaunchSettings(ServiceDescription projectDescription, JsonElement projectSettings)
-        {
-            if (projectDescription.Bindings.Count == 0 && projectSettings.TryGetProperty("applicationUrl", out var applicationUrls))
-            {
-                var addresses = applicationUrls.GetString()?.Split(';');
-
-                foreach (var address in addresses)
-                {
-                    var uri = new Uri(address);
-
-                    projectDescription.Bindings.Add(new ServiceBinding
-                    {
-                        Port = uri.Port,
-                        Protocol = uri.Scheme
-                    });
-                }
-            }
-
-            if (projectDescription.Configuration.Count == 0 && projectSettings.TryGetProperty("environmentVariables", out var environmentVariables))
-            {
-                foreach (var envVar in environmentVariables.EnumerateObject())
-                {
-                    projectDescription.Configuration.Add(new ConfigurationSource
-                    {
-                        Name = envVar.Name,
-                        Value = envVar.Value.GetString()
-                    });
-                }
-            }
-
-            if (projectDescription.Replicas == null && projectSettings.TryGetProperty("replicas", out var replicasElement))
-            {
-                projectDescription.Replicas = replicasElement.GetInt32();
-            }
+            return new Application(projectDescription == null ? new ServiceDescription[0] : new[] { projectDescription }) { Source = fullPath, ContextDirectory = Path.GetDirectoryName(fullPath) };
         }
 
         public static Application FromSolution(string path)
@@ -170,14 +76,47 @@
                 }
             }
 
-            return new Application(descriptions)
-            {
-                Source = fullPath,
-                ContextDirectory = Path.GetDirectoryName(fullPath)
-            };
+            return new Application(descriptions) { Source = fullPath, ContextDirectory = Path.GetDirectoryName(fullPath) };
         }
 
-        public Dictionary<string, Service> Services { get; }
+        public static Application FromYaml(string path)
+        {
+            var fullPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), path));
+
+            var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                .Build();
+
+            var descriptions = deserializer.Deserialize<ServiceDescription[]>(new StringReader(File.ReadAllText(path)));
+
+            var contextDirectory = Path.GetDirectoryName(fullPath);
+
+            foreach (var d in descriptions)
+            {
+                if (d.Project == null)
+                {
+                    continue;
+                }
+
+                // Try to populate more from launch settings
+                var projectFilePath = Path.GetFullPath(Path.Combine(contextDirectory, d.Project));
+
+                if (!TryGetLaunchSettings(projectFilePath, out var projectSettings))
+                {
+                    continue;
+                }
+
+                PopulateFromLaunchSettings(d, projectSettings);
+            }
+
+            return new Application(descriptions)
+                   {
+                       Source = fullPath,
+
+                       // Use the file location as the context when loading from a file
+                       ContextDirectory = contextDirectory
+                   };
+        }
 
         internal void PopulateEnvironment(Service service, Action<string, string> set, string defaultHost = "localhost")
         {
@@ -192,8 +131,8 @@
 
             void SetBinding(string serviceName, ServiceBinding b)
             {
-                var configName = "";
-                var envName = "";
+                var configName = string.Empty;
+                var envName = string.Empty;
 
                 if (string.IsNullOrEmpty(b.Name))
                 {
@@ -230,12 +169,54 @@
             }
 
             // Inject dependency information
-            foreach (var s in this.Services.Values)
+            foreach (var s in Services.Values)
             {
                 foreach (var b in s.Description.Bindings)
                 {
                     SetBinding(s.Description.Name.ToUpper(), b);
                 }
+            }
+        }
+
+        private static ServiceDescription CreateDescriptionFromProject(string fullPath)
+        {
+            if (!TryGetLaunchSettings(fullPath, out var projectSettings))
+            {
+                return null;
+            }
+
+            var projectDescription = new ServiceDescription { Name = Path.GetFileNameWithoutExtension(fullPath).ToLower(), Project = fullPath };
+
+            PopulateFromLaunchSettings(projectDescription, projectSettings);
+
+            return projectDescription;
+        }
+
+        private static void PopulateFromLaunchSettings(ServiceDescription projectDescription, JsonElement projectSettings)
+        {
+            if (projectDescription.Bindings.Count == 0 && projectSettings.TryGetProperty("applicationUrl", out var applicationUrls))
+            {
+                var addresses = applicationUrls.GetString()?.Split(';');
+
+                foreach (var address in addresses)
+                {
+                    var uri = new Uri(address);
+
+                    projectDescription.Bindings.Add(new ServiceBinding { Port = uri.Port, Protocol = uri.Scheme });
+                }
+            }
+
+            if (projectDescription.Configuration.Count == 0 && projectSettings.TryGetProperty("environmentVariables", out var environmentVariables))
+            {
+                foreach (var envVar in environmentVariables.EnumerateObject())
+                {
+                    projectDescription.Configuration.Add(new ConfigurationSource { Name = envVar.Name, Value = envVar.Value.GetString() });
+                }
+            }
+
+            if (projectDescription.Replicas == null && projectSettings.TryGetProperty("replicas", out var replicasElement))
+            {
+                projectDescription.Replicas = replicasElement.GetInt32();
             }
         }
 

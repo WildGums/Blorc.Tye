@@ -15,9 +15,12 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0460" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" PrivateAssets="all" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Blorc.Tye\Blorc.Tye.csproj" />
   </ItemGroup>
 </Project>

@@ -8,9 +8,6 @@
     <Description>Tye service discorver for Blazor.</Description>
     <PackageTags>blazor;core</PackageTags>
     <IsPackable>true</IsPackable>
-    <!--
-    <LangVersion>8.0</LangVersion>
-    -->
     <RazorLangVersion>3.0</RazorLangVersion>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>

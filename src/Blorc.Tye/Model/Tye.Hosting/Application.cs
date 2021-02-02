@@ -1,4 +1,4 @@
-﻿namespace Blorc.Tye.Model.Tye.Hosting
+﻿namespace Blorc.Tye
 {
     using System;
     using System.Collections.Generic;

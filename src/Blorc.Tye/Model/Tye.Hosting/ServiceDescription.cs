@@ -1,4 +1,4 @@
-﻿namespace Blorc.Tye.Model.Tye.Hosting
+﻿namespace Blorc.Tye
 {
     using System.Collections.Generic;
 
@@ -28,14 +28,5 @@
         public int? Replicas { get; set; }
 
         public string WorkingDirectory { get; set; }
-    }
-
-    public class ConfigurationSource
-    {
-        public string Name { get; set; }
-
-        public string Source { get; set; }
-
-        public string Value { get; set; }
     }
 }

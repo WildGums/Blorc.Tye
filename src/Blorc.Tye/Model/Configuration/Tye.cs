@@ -1,10 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Tye.cs" company="WildGums">
-//   Copyright (c) 2008 - 2020 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Blorc.Tye.Model.Configuration
+﻿namespace Blorc.Tye
 {
     public class Tye
     {

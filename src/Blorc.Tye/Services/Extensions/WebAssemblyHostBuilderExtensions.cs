@@ -1,10 +1,9 @@
-﻿namespace Blorc.Tye.Services.Extensions
+﻿namespace Blorc.Tye
 {
     using System;
     using System.Threading.Tasks;
 
     using Blorc.Services;
-    using Blorc.Tye.Model.Configuration;
 
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;

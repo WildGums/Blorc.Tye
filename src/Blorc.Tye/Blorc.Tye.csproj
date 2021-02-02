@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <AssemblyName>Blorc.Tye</AssemblyName>
     <RootNamespace>Blorc.Tye</RootNamespace>
     <PackageId>Blorc.Tye</PackageId>
@@ -21,9 +21,9 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0460" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0481" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Sln" Version="0.3.0" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <PackageReference Include="YamlDotNet" Version="9.1.4" />

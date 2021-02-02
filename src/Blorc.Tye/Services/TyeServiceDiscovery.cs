@@ -1,10 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MicronetesServiceDiscovery.cs" company="WildGums">
-//   Copyright (c) 2008 - 2020 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Blorc.Tye.Services
+﻿namespace Blorc.Tye
 {
     using System;
     using System.Linq;
@@ -12,9 +6,6 @@ namespace Blorc.Tye.Services
     using System.Threading.Tasks;
 
     using Blorc.Services;
-    using Blorc.Services.Interfaces;
-    using Blorc.Tye.Model.Configuration;
-    using Blorc.Tye.Model.Tye.Hosting;
 
     using Newtonsoft.Json;
 

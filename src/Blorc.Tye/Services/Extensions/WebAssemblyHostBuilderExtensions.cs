@@ -27,13 +27,13 @@
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        public static async Task<bool> IsTyeConfigurationAvailable(this WebAssemblyHostBuilder @this)
+        public static async Task<bool> IsTyeConfigurationAvailableAsync(this WebAssemblyHostBuilder @this)
         {
             GetWebAssemblyHostBuilder().Services.AddBlorcCore();
             var assemblyHost = GetWebAssemblyHostBuilder().Build();
 
             var configurationService = assemblyHost.Services.GetService<IConfigurationService>();
-            var section = await configurationService.GetSection<Tye>("tye");
+            var section = await configurationService.GetSectionAsync<Tye>("tye");
 
             return !string.IsNullOrWhiteSpace(section?.Url);
         }

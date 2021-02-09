@@ -42,11 +42,11 @@
         /// <returns>
         ///     The <see cref="Task" />.
         /// </returns>
-        public async Task<string> GetServiceEndPoint(string serviceName, int idx = 0)
+        public async Task<string> GetServiceEndPointAsync(string serviceName, int idx = 0)
         {
             var endPoint = string.Empty;
 
-            var tyeSection = await _configurationService.GetSection<Tye>("tye");
+            var tyeSection = await _configurationService.GetSectionAsync<Tye>("tye");
 
             var apiV1Services = "api/v1/services";
             var address = new Uri(tyeSection.Url);
@@ -66,7 +66,7 @@
             return endPoint;
         }
 
-        public Task<string> GetServiceEndPoint(string serviceName, string bindingName)
+        public Task<string> GetServiceEndPointAsync(string serviceName, string bindingName)
         {
             throw new NotImplementedException();
         }

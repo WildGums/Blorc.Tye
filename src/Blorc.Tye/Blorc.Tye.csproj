@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFrameworks>net5.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <AssemblyName>Blorc.Tye</AssemblyName>
     <RootNamespace>Blorc.Tye</RootNamespace>
     <PackageId>Blorc.Tye</PackageId>

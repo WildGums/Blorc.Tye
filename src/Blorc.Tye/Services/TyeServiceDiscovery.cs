@@ -58,7 +58,7 @@
             var service = JsonConvert.DeserializeObject<Service>(deserializedService);
 
             var serviceBinding = service.Description.Bindings.ElementAt(idx);
-            if (serviceBinding != null)
+            if (serviceBinding is not null)
             {
                 endPoint = $"{serviceBinding.Protocol}://{address.Host}:{serviceBinding.Port}";
             }

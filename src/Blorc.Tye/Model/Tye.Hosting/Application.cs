@@ -38,7 +38,7 @@
 
             var projectDescription = CreateDescriptionFromProject(fullPath);
 
-            return new Application(projectDescription == null ? new ServiceDescription[0] : new[] { projectDescription }) { Source = fullPath, ContextDirectory = Path.GetDirectoryName(fullPath) };
+            return new Application(projectDescription is null ? new ServiceDescription[0] : new[] { projectDescription }) { Source = fullPath, ContextDirectory = Path.GetDirectoryName(fullPath) };
         }
 
         public static Application FromSolution(string path)
@@ -70,7 +70,7 @@
 
                 var description = CreateDescriptionFromProject(projectFilePath);
 
-                if (description != null)
+                if (description is not null)
                 {
                     descriptions.Add(description);
                 }
@@ -93,7 +93,7 @@
 
             foreach (var d in descriptions)
             {
-                if (d.Project == null)
+                if (d.Project is null)
                 {
                     continue;
                 }
@@ -120,7 +120,7 @@
 
         internal void PopulateEnvironment(Service service, Action<string, string> set, string defaultHost = "localhost")
         {
-            if (service.Description.Configuration != null)
+            if (service.Description.Configuration is not null)
             {
                 // Inject normal configuration
                 foreach (var pair in service.Description.Configuration)
@@ -158,7 +158,7 @@
                     set($"{envName}_SERVICE_PROTOCOL", b.Protocol);
                 }
 
-                if (b.Port != null)
+                if (b.Port is not null)
                 {
                     set($"SERVICE__{configName}__PORT", b.Port.ToString());
                     set($"{envName}_SERVICE_PORT", b.Port.ToString());
@@ -214,7 +214,7 @@
                 }
             }
 
-            if (projectDescription.Replicas == null && projectSettings.TryGetProperty("replicas", out var replicasElement))
+            if (projectDescription.Replicas is null && projectSettings.TryGetProperty("replicas", out var replicasElement))
             {
                 projectDescription.Replicas = replicasElement.GetInt32();
             }

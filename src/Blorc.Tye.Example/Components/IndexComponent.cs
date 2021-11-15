@@ -16,14 +16,14 @@
         {
         }
 
-        protected async Task OnButtonClick()
+        protected async Task OnButtonClickAsync()
         {
-            if (SurveyExcutionService != null)
+            if (SurveyExcutionService is not null)
             {
                 await SurveyExcutionService.ExecuteAsync();
             }
 
-            if (SurveyVisualizationService != null)
+            if (SurveyVisualizationService is not null)
             {
                 await SurveyVisualizationService.ShowAsync();
             }

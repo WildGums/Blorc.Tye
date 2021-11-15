@@ -49,12 +49,12 @@
         {
             get
             {
-                if (Description.DockerImage != null)
+                if (Description.DockerImage is not null)
                 {
                     return ServiceType.Container;
                 }
 
-                if (Description.Project != null)
+                if (Description.Project is not null)
                 {
                     return ServiceType.Project;
                 }

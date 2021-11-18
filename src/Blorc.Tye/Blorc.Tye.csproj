@@ -18,7 +18,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0515" />
+    <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0639" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Sln" Version="0.3.0" />

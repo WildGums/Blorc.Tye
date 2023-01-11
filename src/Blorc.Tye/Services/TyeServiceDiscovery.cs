@@ -50,17 +50,21 @@
 
             var apiV1Services = "api/v1/services";
             var address = new Uri(tyeSection.Url);
-            
-            var httpClient = new HttpClient { BaseAddress = address };
 
-            var deserializedService = await httpClient.GetStringAsync($"{apiV1Services}/{serviceName}");
-
-            var service = JsonConvert.DeserializeObject<Service>(deserializedService);
-
-            var serviceBinding = service.Description.Bindings.ElementAt(idx);
-            if (serviceBinding is not null)
+            using (var httpClient = new HttpClient
             {
-                endPoint = $"{serviceBinding.Protocol}://{address.Host}:{serviceBinding.Port}";
+                BaseAddress = address
+            })
+            {
+                var deserializedService = await httpClient.GetStringAsync($"{apiV1Services}/{serviceName}");
+
+                var service = JsonConvert.DeserializeObject<Service>(deserializedService);
+
+                var serviceBinding = service.Description.Bindings.ElementAt(idx);
+                if (serviceBinding is not null)
+                {
+                    endPoint = $"{serviceBinding.Protocol}://{address.Host}:{serviceBinding.Port}";
+                }
             }
 
             return endPoint;

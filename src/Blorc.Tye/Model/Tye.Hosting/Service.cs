@@ -1,4 +1,7 @@
-﻿namespace Blorc.Tye
+﻿#pragma warning disable IDISP004 // Don't ignore created IDisposable
+#pragma warning disable IDISP006 // Implement IDisposable
+
+namespace Blorc.Tye
 {
     using System;
     using System.Collections.Concurrent;
@@ -11,7 +14,7 @@
     {
         public Service()
         {
-            Logs.Subscribe(
+            _ = Logs.Subscribe(
                 entry =>
                 {
                     if (CachedLogs.Count > 5000)

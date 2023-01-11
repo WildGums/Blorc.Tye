@@ -1,5 +1,6 @@
 ﻿namespace Blorc.Tye
 {
+    using System.Linq;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -87,35 +88,38 @@
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
 
-            var descriptions = deserializer.Deserialize<ServiceDescription[]>(new StringReader(File.ReadAllText(path)));
-
-            var contextDirectory = Path.GetDirectoryName(fullPath);
-
-            foreach (var d in descriptions)
+            using (var stringReader = new StringReader(File.ReadAllText(path)))
             {
-                if (d.Project is null)
+                var descriptions = deserializer.Deserialize<ServiceDescription[]>(stringReader);
+
+                var contextDirectory = Path.GetDirectoryName(fullPath);
+
+                foreach (var d in descriptions)
                 {
-                    continue;
+                    if (d.Project is null)
+                    {
+                        continue;
+                    }
+
+                    // Try to populate more from launch settings
+                    var projectFilePath = Path.GetFullPath(Path.Combine(contextDirectory, d.Project));
+
+                    if (!TryGetLaunchSettings(projectFilePath, out var projectSettings))
+                    {
+                        continue;
+                    }
+
+                    PopulateFromLaunchSettings(d, projectSettings);
                 }
 
-                // Try to populate more from launch settings
-                var projectFilePath = Path.GetFullPath(Path.Combine(contextDirectory, d.Project));
-
-                if (!TryGetLaunchSettings(projectFilePath, out var projectSettings))
+                return new Application(descriptions)
                 {
-                    continue;
-                }
+                    Source = fullPath,
 
-                PopulateFromLaunchSettings(d, projectSettings);
+                    // Use the file location as the context when loading from a file
+                    ContextDirectory = contextDirectory
+                };
             }
-
-            return new Application(descriptions)
-                   {
-                       Source = fullPath,
-
-                       // Use the file location as the context when loading from a file
-                       ContextDirectory = contextDirectory
-                   };
         }
 
         internal void PopulateEnvironment(Service service, Action<string, string> set, string defaultHost = "localhost")
@@ -208,10 +212,12 @@
 
             if (projectDescription.Configuration.Count == 0 && projectSettings.TryGetProperty("environmentVariables", out var environmentVariables))
             {
-                foreach (var envVar in environmentVariables.EnumerateObject())
-                {
-                    projectDescription.Configuration.Add(new ConfigurationSource { Name = envVar.Name, Value = envVar.Value.GetString() });
-                }
+                projectDescription.Configuration.AddRange(from envVar in environmentVariables.EnumerateObject()
+                                                          select new ConfigurationSource
+                                                          {
+                                                              Name = envVar.Name,
+                                                              Value = envVar.Value.GetString()
+                                                          });
             }
 
             if (projectDescription.Replicas is null && projectSettings.TryGetProperty("replicas", out var replicasElement))
